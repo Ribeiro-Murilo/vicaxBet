@@ -48,7 +48,7 @@ mysql -u root < db/seed.sql
 ```
 
 > O `schema.sql` ja cria o database `vicaxbet`. O `seed.sql` cria o admin
-> (**login: admin / senha: admin**) e alguns jogos de exemplo.
+> (**login: admin / senha: senhaadmin**) e alguns jogos de exemplo.
 
 ### 2. Configuracao
 
