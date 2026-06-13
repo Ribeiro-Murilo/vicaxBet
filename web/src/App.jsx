@@ -27,7 +27,8 @@ function Navbar() {
         {user.is_admin ? <Link to="/admin">Cartola</Link> : null}
       </div>
       <div className="saldo">
-        <span className="pontos">{user.pontos} pts</span>
+        <span className="pp" title="Pontos Principais (vale na Copa)">{user.pontos_principais} PP</span>
+        <span className="pa" title="Pontos de Aposta (so satira)">{user.pontos_aposta} PA</span>
         <button onClick={sair}>Sair</button>
       </div>
     </nav>

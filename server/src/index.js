@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.routes.js';
 import gamesRoutes from './routes/games.routes.js';
+import palpitesRoutes from './routes/palpites.routes.js';
 import apostasRoutes from './routes/apostas.routes.js';
 import rankingRoutes from './routes/ranking.routes.js';
 import adminRoutes from './routes/admin.routes.js';
@@ -15,6 +16,7 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => res.json({ ok: true, casa: 'vicaxBet' }));
 app.use('/api', authRoutes);
 app.use('/api/games', gamesRoutes);
+app.use('/api/palpites', palpitesRoutes);
 app.use('/api/apostas', apostasRoutes);
 app.use('/api/ranking', rankingRoutes);
 app.use('/api/admin', adminRoutes);

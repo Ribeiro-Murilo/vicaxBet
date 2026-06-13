@@ -12,7 +12,8 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   is_admin TINYINT(1) NOT NULL DEFAULT 0,
-  pontos INT NOT NULL DEFAULT 1000,
+  pontos_principais INT NOT NULL DEFAULT 0,
+  pontos_aposta INT NOT NULL DEFAULT 1000,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -20,7 +21,7 @@ CREATE TABLE games (
   id INT AUTO_INCREMENT PRIMARY KEY,
   time_a VARCHAR(60) NOT NULL,
   time_b VARCHAR(60) NOT NULL,
-  data_jogo DATETIME NULL,
+  data_jogo DATETIME NOT NULL,
   gol_a INT NULL,
   gol_b INT NULL,
   status ENUM('aberto','resolvido') NOT NULL DEFAULT 'aberto',
@@ -28,16 +29,29 @@ CREATE TABLE games (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE apostas (
+-- Palpite oficial: 1 placar por jogo. Move o ponto principal (serio).
+CREATE TABLE palpites (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   game_id INT NOT NULL,
   palpite_gol_a INT NOT NULL,
   palpite_gol_b INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_user_game_palpite (user_id, game_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (game_id) REFERENCES games(id)
+);
+
+-- Aposta satirica: 1 por jogo. Usa o placar do palpite e a odd sorteada pela casa.
+CREATE TABLE apostas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  game_id INT NOT NULL,
   valor INT NOT NULL,
   odd DECIMAL(5,2) NOT NULL,
   status ENUM('pendente','ganhou','perdeu') NOT NULL DEFAULT 'pendente',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_user_game_aposta (user_id, game_id),
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (game_id) REFERENCES games(id)
 );

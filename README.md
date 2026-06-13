@@ -6,14 +6,27 @@ tempo e dignidade. Brincadeira interna, vai pela satira.
 ## O que e
 
 - Login e cadastro (sem firula de criptografia pesada).
-- **Moeda unica: pontos.** Cada jogador comeca com **1000 pontos**.
-- **Aposta de pontos com odds:** voce escolhe um jogo, palpita o **placar exato**,
-  define quantos pontos apostar, e o sistema sorteia uma **odd de 1.1x a 20x** travada na hora.
-  - Acertou o placar exato -> ganha `pontos x odd`.
-  - Acertar **so o vencedor nao da nada**.
-  - Errou -> perde os pontos apostados.
-- **Um ranking** por pontos.
-- Admin ("O Cartola") cadastra os jogos e lanca o placar final, que resolve as apostas.
+- **Duas pontuacoes independentes, sem troca entre elas:**
+
+### Ponto Principal (serio - vale na Copa)
+- Voce so registra **o placar** de cada jogo (um palpite por jogo).
+- Quando o admin lanca o placar real, ganha **100 pontos so se acertar o placar EXATO**.
+  Acertar so o vencedor nao da nada. Nao existe aposta nem outra forma de ganhar.
+- E o que conta no **ranking final da Copa**.
+
+### Ponto de Aposta (satira)
+- Cada jogador comeca com **1000 pontos de aposta**.
+- Voce aposta em cima do seu palpite e **a casa sorteia uma odd entre 0.2x e 20x**,
+  com 50% de chance de cair **abaixo de 1** (da pra ganhar e ainda perder ponto - e a piada).
+- So ganha se o placar for exato: recebe `valor x odd`. Senao, perde o que apostou.
+- Ranking separado, **nunca** vira ponto principal.
+
+### Prazo
+- Cada jogo tem uma data/hora (definida pelo admin). **Depois dela nao da pra mudar
+  palpite nem aposta.**
+
+Admin ("O Cartola") cadastra os jogos (com data/hora) e lanca o placar final,
+que credita os pontos principais e resolve as apostas.
 
 ## Stack
 

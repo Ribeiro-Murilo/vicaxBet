@@ -5,7 +5,7 @@ import { sign, requireAuth } from '../auth.js';
 
 const router = Router();
 
-const CAMPOS_PUBLICOS = 'id, username, is_admin, pontos';
+const CAMPOS_PUBLICOS = 'id, username, is_admin, pontos_principais, pontos_aposta';
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body || {};
@@ -41,7 +41,8 @@ router.post('/login', async (req, res) => {
     id: user.id,
     username: user.username,
     is_admin: user.is_admin,
-    pontos: user.pontos,
+    pontos_principais: user.pontos_principais,
+    pontos_aposta: user.pontos_aposta,
   };
   res.json({ token: sign(publico), user: publico });
 });

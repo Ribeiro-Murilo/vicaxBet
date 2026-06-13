@@ -22,8 +22,17 @@ export default function Admin() {
 
   async function cadastrarJogo(e) {
     e.preventDefault();
+    if (!novo.data_jogo) {
+      setMsg('Defina a data/hora do jogo (e o prazo do palpite).');
+      return;
+    }
     try {
-      await api('/admin/games', { method: 'POST', body: novo });
+      // datetime-local vem como "2026-06-20T16:00"; MySQL quer espaco no lugar do T.
+      const data_jogo = novo.data_jogo.replace('T', ' ') + ':00';
+      await api('/admin/games', {
+        method: 'POST',
+        body: { time_a: novo.time_a, time_b: novo.time_b, data_jogo },
+      });
       setNovo({ time_a: '', time_b: '', data_jogo: '' });
       setMsg('Jogo cadastrado. Que comecem os palpites furados.');
       await carregar();

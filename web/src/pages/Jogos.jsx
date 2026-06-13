@@ -3,41 +3,74 @@ import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import Modal from '../components/Modal.jsx';
 
+function fechado(g) {
+  return g.status === 'resolvido' || new Date() >= new Date(g.data_jogo);
+}
+
+function formatData(d) {
+  if (!d) return '';
+  return new Date(d).toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export default function Jogos() {
   const { atualizarUser } = useAuth();
   const [games, setGames] = useState([]);
+  const [palpites, setPalpites] = useState({});
   const [msg, setMsg] = useState('');
-  const [apostaModal, setApostaModal] = useState(null); // { game, valor, palpiteA, palpiteB }
+  const [apostaModal, setApostaModal] = useState(null); // { game, valor }
 
   async function carregar() {
-    setGames(await api('/games'));
+    const [gs, ps] = await Promise.all([api('/games'), api('/palpites')]);
+    setGames(gs);
+    const mapa = {};
+    for (const p of ps) mapa[p.game_id] = { a: p.palpite_gol_a, b: p.palpite_gol_b };
+    setPalpites(mapa);
   }
 
   useEffect(() => {
     carregar().catch((e) => setMsg(e.message));
   }, []);
 
-  function abrirAposta(game) {
-    setApostaModal({ game, valor: '', palpiteA: '', palpiteB: '' });
+  function setPalpite(gameId, campo, valor) {
+    setPalpites((p) => ({
+      ...p,
+      [gameId]: { ...(p[gameId] || { a: '', b: '' }), [campo]: valor },
+    }));
   }
 
-  async function confirmarAposta() {
-    const { game, valor, palpiteA, palpiteB } = apostaModal;
-    if (palpiteA === '' || palpiteB === '') {
-      setMsg('Preenche o palpite de placar antes de apostar.');
+  async function salvarPalpite(gameId) {
+    const p = palpites[gameId] || {};
+    if (p.a === '' || p.a == null || p.b === '' || p.b == null) {
+      setMsg('Preenche o placar antes de salvar.');
       return;
     }
     try {
+      await api('/palpites', {
+        method: 'POST',
+        body: { game_id: gameId, palpite_gol_a: Number(p.a), palpite_gol_b: Number(p.b) },
+      });
+      setMsg('Palpite salvo. Esse e o que vale ponto principal na Copa.');
+    } catch (e) {
+      setMsg(e.message);
+    }
+  }
+
+  async function confirmarAposta() {
+    const { game, valor } = apostaModal;
+    try {
       const r = await api('/apostas', {
         method: 'POST',
-        body: {
-          game_id: game.id,
-          palpite_gol_a: Number(palpiteA),
-          palpite_gol_b: Number(palpiteB),
-          valor: Number(valor),
-        },
+        body: { game_id: game.id, valor: Number(valor) },
       });
-      setMsg(`Aposta feita! Odd travada em ${r.odd}x. Se acertar o placar exato, leva ${Math.round(r.valor * r.odd)} pontos.`);
+      const retorno = Math.round(r.valor * r.odd);
+      setMsg(
+        `Aposta registrada! A casa te deu odd ${r.odd}x. Se o placar bater, voce leva ${retorno} pontos de aposta${r.odd < 1 ? ' (sim, menos do que apostou. a casa avisou)' : ''}.`
+      );
       setApostaModal(null);
       await atualizarUser();
     } catch (e) {
@@ -49,30 +82,52 @@ export default function Jogos() {
     <div className="container">
       <h2>Jogos da Copa</h2>
       <p className="ajuda">
-        Aposta seus pontos no placar exato. A odd e sorteada na hora (1.1x a 20x).
-        Acertou o placar = pontos x odd. Acertar so o vencedor nao da nada. Errou = perde a aposta.
+        Ponto Principal (serio): so acertar o placar EXATO pontua. Acertar so o vencedor nao da nada.
+        Ponto de Aposta (satira): aposta em cima do seu palpite e a casa sorteia uma odd de 0.2x a 20x.
+        Depois do prazo do jogo nada pode ser mudado.
       </p>
       {msg ? <div className="msg">{msg}</div> : null}
       <div className="jogos-grid">
         {games.map((g) => {
-          const resolvido = g.status === 'resolvido';
+          const p = palpites[g.id] || { a: '', b: '' };
+          const travado = fechado(g);
           return (
-            <div key={g.id} className={`jogo-card ${resolvido ? 'resolvido' : ''}`}>
+            <div key={g.id} className={`jogo-card ${travado ? 'resolvido' : ''}`}>
               <div className="times">
                 <span>{g.time_a}</span>
                 <span className="vs">x</span>
                 <span>{g.time_b}</span>
               </div>
-              {resolvido ? (
-                <div className="placar-final">
-                  Final: {g.gol_a} x {g.gol_b}
-                </div>
+              <div className="data-jogo">prazo: {formatData(g.data_jogo)}</div>
+
+              {g.status === 'resolvido' ? (
+                <div className="placar-final">Final: {g.gol_a} x {g.gol_b}</div>
+              ) : travado ? (
+                <div className="placar-final fechado">Prazo encerrado</div>
               ) : (
-                <div className="botoes">
-                  <button className="apostar" onClick={() => abrirAposta(g)}>
-                    Apostar pontos
-                  </button>
-                </div>
+                <>
+                  <div className="palpite-inputs">
+                    <input
+                      type="number"
+                      min="0"
+                      value={p.a}
+                      onChange={(e) => setPalpite(g.id, 'a', e.target.value)}
+                    />
+                    <span>x</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={p.b}
+                      onChange={(e) => setPalpite(g.id, 'b', e.target.value)}
+                    />
+                  </div>
+                  <div className="botoes">
+                    <button onClick={() => salvarPalpite(g.id)}>Salvar palpite</button>
+                    <button className="apostar" onClick={() => setApostaModal({ game: g, valor: '' })}>
+                      Apostar
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           );
@@ -87,25 +142,10 @@ export default function Jogos() {
         {apostaModal ? (
           <>
             <p className="ajuda">
-              Voce ganha so se acertar o placar exato. A odd e sorteada na hora (1.1x a 20x).
+              A aposta usa o placar do seu palpite salvo. A casa sorteia a odd na hora (0.2x a 20x,
+              metade das vezes abaixo de 1). So ganha se o placar for exato.
             </p>
-            <div className="modal-palpite">
-              <span>Placar:</span>
-              <input
-                type="number"
-                min="0"
-                value={apostaModal.palpiteA}
-                onChange={(e) => setApostaModal({ ...apostaModal, palpiteA: e.target.value })}
-              />
-              <span>x</span>
-              <input
-                type="number"
-                min="0"
-                value={apostaModal.palpiteB}
-                onChange={(e) => setApostaModal({ ...apostaModal, palpiteB: e.target.value })}
-              />
-            </div>
-            <label className="modal-label">Quantos pontos vai queimar?</label>
+            <label className="modal-label">Quantos pontos de aposta vai arriscar?</label>
             <input
               className="modal-input"
               type="number"

@@ -51,6 +51,8 @@ body {
 
 .saldo { display: flex; align-items: center; gap: 10px; }
 .pontos { color: var(--dourado); font-weight: bold; }
+.pp { color: var(--dourado); font-weight: bold; }
+.pa { color: var(--neon); font-weight: bold; }
 
 button {
   background: linear-gradient(180deg, var(--dourado), var(--dourado-escuro));
@@ -160,6 +162,14 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
   margin-top: 12px;
   font-weight: bold;
 }
+.placar-final.fechado { color: #8a8175; font-size: 1rem; }
+.data-jogo {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #8a8175;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
 
 /* Saldos / banca */
 .saldos { display: flex; gap: 16px; margin: 16px 0; }
@@ -174,6 +184,11 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
 .saldo-box .num { font-size: 2.2rem; font-weight: 900; }
 .pontos-box { background: rgba(245,197,24,0.15); border: 2px solid var(--dourado); max-width: 240px; }
 .pontos-box .num { color: var(--dourado); }
+.pp-box { background: rgba(245,197,24,0.15); border: 2px solid var(--dourado); }
+.pp-box .num { color: var(--dourado); }
+.pa-box { background: rgba(255,46,136,0.15); border: 2px solid var(--neon); }
+.pa-box .num { color: var(--neon); }
+.saldo-box .legenda { font-size: 0.7rem; color: #8a8175; text-transform: uppercase; }
 
 /* Tabelas */
 .tabela { width: 100%; border-collapse: collapse; margin-top: 10px; }

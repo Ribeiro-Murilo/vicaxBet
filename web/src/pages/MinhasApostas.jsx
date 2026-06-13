@@ -18,11 +18,18 @@ export default function MinhasApostas() {
     <div className="container">
       <h2>Minha banca</h2>
       <div className="saldos">
-        <div className="saldo-box pontos-box">
-          <span className="num">{user.pontos}</span>
-          <span>Pontos</span>
+        <div className="saldo-box pp-box">
+          <span className="num">{user.pontos_principais}</span>
+          <span>Pontos Principais</span>
+          <span className="legenda">vale na Copa</span>
+        </div>
+        <div className="saldo-box pa-box">
+          <span className="num">{user.pontos_aposta}</span>
+          <span>Pontos de Aposta</span>
+          <span className="legenda">so satira</span>
         </div>
       </div>
+      <p className="ajuda">Os dois pontos sao separados. Nao da pra trocar um pelo outro.</p>
       {msg ? <div className="msg">{msg}</div> : null}
 
       <h3>Historico de apostas</h3>
@@ -43,7 +50,7 @@ export default function MinhasApostas() {
             {apostas.map((a) => (
               <tr key={a.id} className={`linha-${a.status}`}>
                 <td>{a.time_a} x {a.time_b}</td>
-                <td>{a.palpite_gol_a} x {a.palpite_gol_b}</td>
+                <td>{a.palpite_gol_a != null ? `${a.palpite_gol_a} x ${a.palpite_gol_b}` : '-'}</td>
                 <td>{a.valor}</td>
                 <td>{a.odd}x</td>
                 <td>{a.status}</td>
