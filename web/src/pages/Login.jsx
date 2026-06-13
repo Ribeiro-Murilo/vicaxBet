@@ -56,7 +56,6 @@ export default function Login() {
             {modo === 'entrar' ? 'Apostar minha dignidade' : 'Criar conta na firma'}
           </button>
         </form>
-        <p className="dica">Admin de teste: admin / senhaadmin</p>
       </div>
     </div>
   );
