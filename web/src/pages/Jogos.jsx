@@ -174,9 +174,9 @@ export default function Jogos() {
         ) : null}
       </Modal>
 
-      <Modal aberto={vicioModal} titulo="Opa, calma la, campeao" onFechar={() => setVicioModal(false)}>
+      <Modal aberto={vicioModal} titulo="Calma pai... Respita" onFechar={() => setVicioModal(false)}>
         <div className="vicio">
-          <p className="vicio-emoji">!</p>
+          <p className="vicio-emoji">✋</p>
           <p>
             Voce ja fez <strong>2 apostas nesse jogo</strong>. Isso aqui e brincadeira de firma e os
             pontos nao valem nada, mas o impulso de apostar de novo e de novo... esse e real.
