@@ -1,0 +1,238 @@
+:root {
+  --verde: #0b6b2f;
+  --verde-mesa: #0e7c38;
+  --dourado: #f5c518;
+  --dourado-escuro: #b8860b;
+  --vermelho: #c0392b;
+  --preto: #14110f;
+  --neon: #ff2e88;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%, #14110f 0%, #0a0806 100%) fixed;
+  color: #f4f4f4;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: linear-gradient(180deg, #1c1712, #0a0806);
+  border-bottom: 3px solid var(--dourado);
+  box-shadow: 0 2px 20px rgba(245, 197, 24, 0.25);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.logo {
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: var(--dourado);
+  text-shadow: 0 0 8px var(--dourado-escuro), 2px 2px 0 #000;
+  letter-spacing: 1px;
+}
+.logo.grande { font-size: 3rem; }
+
+.navbar .links a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+.navbar .links a:hover { color: var(--dourado); }
+
+.saldo { display: flex; align-items: center; gap: 10px; }
+.saldo .pp, .pp { color: var(--dourado); font-weight: bold; }
+.saldo .fa, .fa { color: var(--neon); font-weight: bold; }
+
+button {
+  background: linear-gradient(180deg, var(--dourado), var(--dourado-escuro));
+  color: #14110f;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+button:hover { filter: brightness(1.1); }
+button.apostar { background: linear-gradient(180deg, var(--neon), #a01055); color: #fff; }
+
+.container { max-width: 960px; margin: 24px auto; padding: 0 20px; }
+
+h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
+.ajuda { color: #c9c2b6; font-size: 0.85rem; }
+.msg {
+  background: rgba(245, 197, 24, 0.12);
+  border: 1px solid var(--dourado);
+  padding: 10px;
+  border-radius: 6px;
+  margin: 12px 0;
+}
+.erro { color: var(--vermelho); font-weight: bold; margin: 8px 0; }
+
+/* Login */
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.login-card {
+  background: linear-gradient(160deg, #1c1712, #0a0806);
+  border: 2px solid var(--dourado);
+  border-radius: 14px;
+  padding: 32px;
+  width: 360px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(245, 197, 24, 0.3);
+}
+.slogan { color: var(--neon); font-style: italic; margin-top: 0; }
+.login-card .tabs { display: flex; gap: 8px; margin: 16px 0; }
+.login-card .tabs button { flex: 1; background: #2a2118; color: #fff; }
+.login-card .tabs button.ativo { background: var(--dourado); color: #000; }
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid var(--dourado-escuro);
+  background: #2a2118;
+  color: #fff;
+}
+.btn-grande { width: 100%; padding: 12px; margin-top: 10px; font-size: 0.9rem; }
+.dica { color: #8a8175; font-size: 0.75rem; margin-top: 14px; }
+
+/* Jogos */
+.jogos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.jogo-card {
+  background: var(--verde-mesa);
+  border: 2px solid var(--dourado-escuro);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
+}
+.jogo-card.resolvido { opacity: 0.7; background: #2a2a2a; }
+.times {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+.times .vs { color: var(--dourado); }
+.palpite-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0;
+}
+.palpite-inputs input {
+  width: 50px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--dourado);
+  background: #14110f;
+  color: #fff;
+  font-size: 1.1rem;
+}
+.botoes { display: flex; gap: 6px; }
+.botoes button { flex: 1; font-size: 0.7rem; }
+.placar-final {
+  text-align: center;
+  font-size: 1.3rem;
+  color: var(--dourado);
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* Saldos / banca */
+.saldos { display: flex; gap: 16px; margin: 16px 0; }
+.saldo-box {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.saldo-box .num { font-size: 2.2rem; font-weight: 900; }
+.pp-box { background: rgba(245,197,24,0.15); border: 2px solid var(--dourado); }
+.pp-box .num { color: var(--dourado); }
+.fa-box { background: rgba(255,46,136,0.15); border: 2px solid var(--neon); }
+.fa-box .num { color: var(--neon); }
+.conversao { display: flex; gap: 10px; margin-bottom: 16px; }
+
+/* Tabelas */
+.tabela { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.tabela th, .tabela td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #3a342a;
+  text-align: left;
+}
+.tabela th { color: var(--dourado); text-transform: uppercase; font-size: 0.75rem; }
+.linha-ganhou { background: rgba(11,107,47,0.3); }
+.linha-perdeu { background: rgba(192,57,43,0.2); }
+.placar-inputs input { width: 42px; text-align: center; margin: 0 4px; }
+
+/* Rankings */
+.rankings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.rank-col {
+  background: linear-gradient(160deg, #1c1712, #0a0806);
+  border: 1px solid var(--dourado-escuro);
+  border-radius: 12px;
+  padding: 16px;
+}
+.rank-col h3 { color: var(--dourado); margin-top: 0; }
+.rank-lista { list-style: decimal inside; padding: 0; }
+.rank-lista li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #3a342a;
+}
+.rank-lista li.lider {
+  background: rgba(245,197,24,0.2);
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.form-jogo { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+.form-jogo h3 { width: 100%; color: var(--dourado); margin: 0; }
+.form-jogo input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--dourado-escuro);
+  background: #2a2118;
+  color: #fff;
+}
+
+.rodape {
+  text-align: center;
+  padding: 24px;
+  color: #6f675b;
+  font-size: 0.8rem;
+  border-top: 1px solid #3a342a;
+  margin-top: 40px;
+}
+
+@media (max-width: 640px) {
+  .rankings-grid { grid-template-columns: 1fr; }
+  .saldos { flex-direction: column; }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "vicaxbet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A casa de apostas da firma. So a Copa, sem dinheiro de verdade.",
+  "workspaces": ["server", "web"],
+  "scripts": {
+    "dev:server": "npm -w server run dev",
+    "dev:web": "npm -w web run dev",
+    "dev": "concurrently -n server,web -c green,magenta \"npm run dev:server\" \"npm run dev:web\"",
+    "seed:hash": "node server/scripts/gerar-hash-admin.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
