@@ -1,5 +1,8 @@
 const TOKEN_KEY = 'vicax_token';
 
+// Em prod: endereco do back vem do build (VITE_API_URL). Em dev: vazio -> usa o proxy do Vite (/api)
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -13,7 +16,7 @@ export async function api(path, { method = 'GET', body } = {}) {
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}/api${path}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

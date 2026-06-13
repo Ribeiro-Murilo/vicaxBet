@@ -4,6 +4,9 @@ WORKDIR /app/web
 COPY web/package.json ./
 RUN npm install
 COPY web ./
+# Endereco do back e congelado no build do Vite (vem do .env via docker-compose)
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 FROM nginx:alpine
