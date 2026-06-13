@@ -81,6 +81,31 @@ npm run dev:server
 npm run dev:web
 ```
 
+## Rodar com Docker
+
+O compose sobe **server + web** (o MySQL fica externo, no host que voce apontar no `.env`).
+
+1. Garanta um MySQL acessivel e carregue schema + seed nele:
+
+```bash
+mysql -h SEU_HOST -u SEU_USER -p < db/schema.sql
+mysql -h SEU_HOST -u SEU_USER -p < db/seed.sql
+```
+
+2. Aponte o `.env` da raiz para esse MySQL (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME).
+   O `.env` e lido pelo compose (env_file).
+
+3. Suba:
+
+```bash
+docker compose up --build -d
+```
+
+- Web: **http://localhost:8080**
+- API: **http://localhost:3001**
+
+Para derrubar: `docker compose down`.
+
 ## Testes
 
 A logica de pontuacao (o coracao da brincadeira) tem testes:

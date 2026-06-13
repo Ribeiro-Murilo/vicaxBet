@@ -1,0 +1,22 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: vicax-server
+    # Le DB_HOST/DB_USER/DB_PASSWORD/DB_NAME/JWT_SECRET/PORT do .env (MySQL externo)
+    env_file: .env
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    container_name: vicax-web
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+    restart: unless-stopped
