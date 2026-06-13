@@ -1,7 +1,6 @@
+import './env.js';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
 
 import authRoutes from './routes/auth.routes.js';
 import gamesRoutes from './routes/games.routes.js';
