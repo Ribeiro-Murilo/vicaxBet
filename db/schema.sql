@@ -42,7 +42,8 @@ CREATE TABLE palpites (
   FOREIGN KEY (game_id) REFERENCES games(id)
 );
 
--- Aposta satirica: 1 por jogo. Usa o placar do palpite e a odd sorteada pela casa.
+-- Aposta satirica: ate 2 por jogo (cada uma com sua propria odd).
+-- Usa o placar do palpite e a odd sorteada pela casa.
 CREATE TABLE apostas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -51,7 +52,7 @@ CREATE TABLE apostas (
   odd DECIMAL(5,2) NOT NULL,
   status ENUM('pendente','ganhou','perdeu') NOT NULL DEFAULT 'pendente',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_user_game_aposta (user_id, game_id),
+  KEY idx_user_game_aposta (user_id, game_id),
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (game_id) REFERENCES games(id)
 );

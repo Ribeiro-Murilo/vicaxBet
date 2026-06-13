@@ -20,7 +20,9 @@ export async function api(path, { method = 'GET', body } = {}) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.erro || 'Deu ruim na casa');
+    const err = new Error(data.erro || 'Deu ruim na casa');
+    err.dados = data;
+    throw err;
   }
   return data;
 }

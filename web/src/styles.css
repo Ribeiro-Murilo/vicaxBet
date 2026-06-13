@@ -313,6 +313,31 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
 .modal-acoes button { flex: 1; padding: 12px; }
 .modal-acoes .secundario { background: #2a2118; color: #fff; }
 
+.vicio { text-align: center; }
+.vicio p { color: #f0e9dd; line-height: 1.5; }
+.vicio-emoji {
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  background: var(--vermelho);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 900;
+}
+.vicio-contatos {
+  list-style: none;
+  padding: 12px;
+  margin: 12px 0;
+  text-align: left;
+  background: rgba(192, 57, 43, 0.15);
+  border: 1px solid var(--vermelho);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+.vicio-contatos li { margin: 6px 0; }
+
 .rodape {
   text-align: center;
   padding: 24px;

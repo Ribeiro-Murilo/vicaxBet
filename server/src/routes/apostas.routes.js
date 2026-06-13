@@ -56,26 +56,31 @@ router.post('/', requireAuth, async (req, res) => {
       'SELECT pontos_aposta FROM users WHERE id = ? FOR UPDATE',
       [req.user.id]
     );
-    // Se ja existe aposta nesse jogo, devolve o valor antigo antes de re-apostar.
-    const [[apostaAntiga]] = await conn.query(
-      'SELECT valor FROM apostas WHERE user_id = ? AND game_id = ?',
+    // Limite de 2 apostas por jogo. A 3a abre o alerta de vicio.
+    const [[{ total }]] = await conn.query(
+      'SELECT COUNT(*) AS total FROM apostas WHERE user_id = ? AND game_id = ?',
       [req.user.id, game_id]
     );
-    const saldoDisponivel = user.pontos_aposta + (apostaAntiga ? apostaAntiga.valor : 0);
-    if (saldoDisponivel < aposta) {
+    if (total >= 2) {
+      await conn.rollback();
+      return res.status(429).json({
+        erro: 'Voce ja fez 2 apostas nesse jogo. Respira.',
+        limiteVicio: true,
+      });
+    }
+    if (user.pontos_aposta < aposta) {
       await conn.rollback();
       return res.status(400).json({ erro: 'Pontos de aposta insuficientes' });
     }
 
     const odd = gerarOddSatirica();
-    await conn.query('UPDATE users SET pontos_aposta = ? WHERE id = ?', [
-      saldoDisponivel - aposta,
+    await conn.query('UPDATE users SET pontos_aposta = pontos_aposta - ? WHERE id = ?', [
+      aposta,
       req.user.id,
     ]);
     await conn.query(
       `INSERT INTO apostas (user_id, game_id, valor, odd, status)
-       VALUES (?, ?, ?, ?, 'pendente')
-       ON DUPLICATE KEY UPDATE valor = VALUES(valor), odd = VALUES(odd), status = 'pendente'`,
+       VALUES (?, ?, ?, ?, 'pendente')`,
       [req.user.id, game_id, aposta, odd]
     );
     await conn.commit();

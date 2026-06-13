@@ -23,6 +23,7 @@ export default function Jogos() {
   const [palpites, setPalpites] = useState({});
   const [msg, setMsg] = useState('');
   const [apostaModal, setApostaModal] = useState(null); // { game, valor }
+  const [vicioModal, setVicioModal] = useState(false);
 
   async function carregar() {
     const [gs, ps] = await Promise.all([api('/games'), api('/palpites')]);
@@ -74,6 +75,11 @@ export default function Jogos() {
       setApostaModal(null);
       await atualizarUser();
     } catch (e) {
+      if (e.dados?.limiteVicio) {
+        setApostaModal(null);
+        setVicioModal(true);
+        return;
+      }
       setMsg(e.message);
     }
   }
@@ -144,6 +150,7 @@ export default function Jogos() {
             <p className="ajuda">
               A aposta usa o placar do seu palpite salvo. A casa sorteia a odd na hora (0.2x a 20x,
               metade das vezes abaixo de 1). So ganha se o placar for exato.
+              Voce pode apostar ate 2 vezes no mesmo jogo (cada uma com odd propria).
             </p>
             <label className="modal-label">Quantos pontos de aposta vai arriscar?</label>
             <input
@@ -165,6 +172,26 @@ export default function Jogos() {
             </div>
           </>
         ) : null}
+      </Modal>
+
+      <Modal aberto={vicioModal} titulo="Opa, calma la, campeao" onFechar={() => setVicioModal(false)}>
+        <div className="vicio">
+          <p className="vicio-emoji">!</p>
+          <p>
+            Voce ja fez <strong>2 apostas nesse jogo</strong>. Isso aqui e brincadeira de firma e os
+            pontos nao valem nada, mas o impulso de apostar de novo e de novo... esse e real.
+          </p>
+          <p>
+            Se aposta de verdade estiver te incomodando, sem vergonha de procurar ajuda:
+          </p>
+          <ul className="vicio-contatos">
+            <li><strong>Jogadores Anonimos:</strong> www.jogadoresanonimos.com.br</li>
+            <li><strong>CVV (apoio emocional, 24h):</strong> 188 - www.cvv.org.br</li>
+          </ul>
+          <button className="btn-grande" onClick={() => setVicioModal(false)}>
+            Ta, vou respirar
+          </button>
+        </div>
       </Modal>
     </div>
   );
