@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
+import Modal from '../components/Modal.jsx';
 
 export default function Jogos() {
   const { atualizarUser } = useAuth();
   const [games, setGames] = useState([]);
   const [palpites, setPalpites] = useState({});
   const [msg, setMsg] = useState('');
+  const [apostaModal, setApostaModal] = useState(null); // { game, valor }
 
   async function carregar() {
     const [gs, ps] = await Promise.all([api('/games'), api('/palpites')]);
@@ -40,21 +42,29 @@ export default function Jogos() {
     }
   }
 
-  async function apostar(gameId) {
-    const p = palpites[gameId] || {};
-    const valor = prompt('Quantas fichas vai queimar nessa? (placar exato paga odd)');
-    if (!valor) return;
+  function abrirAposta(game) {
+    const p = palpites[game.id] || {};
+    setApostaModal({ game, valor: '', palpiteA: p.a ?? '', palpiteB: p.b ?? '' });
+  }
+
+  async function confirmarAposta() {
+    const { game, valor, palpiteA, palpiteB } = apostaModal;
+    if (palpiteA === '' || palpiteB === '') {
+      setMsg('Preenche o palpite de placar antes de apostar.');
+      return;
+    }
     try {
       const r = await api('/apostas', {
         method: 'POST',
         body: {
-          game_id: gameId,
-          palpite_gol_a: Number(p.a),
-          palpite_gol_b: Number(p.b),
+          game_id: game.id,
+          palpite_gol_a: Number(palpiteA),
+          palpite_gol_b: Number(palpiteB),
           valor: Number(valor),
         },
       });
       setMsg(`Aposta feita! Odd travada em ${r.odd}x. Se acertar o placar exato, leva ${Math.round(r.valor * r.odd)} fichas.`);
+      setApostaModal(null);
       await atualizarUser();
     } catch (e) {
       setMsg(e.message);
@@ -103,7 +113,7 @@ export default function Jogos() {
                   </div>
                   <div className="botoes">
                     <button onClick={() => salvarPalpite(g.id)}>Palpite oficial</button>
-                    <button className="apostar" onClick={() => apostar(g.id)}>
+                    <button className="apostar" onClick={() => abrirAposta(g)}>
                       Apostar fichas
                     </button>
                   </div>
@@ -113,6 +123,54 @@ export default function Jogos() {
           );
         })}
       </div>
+
+      <Modal
+        aberto={!!apostaModal}
+        titulo={apostaModal ? `Apostar em ${apostaModal.game.time_a} x ${apostaModal.game.time_b}` : ''}
+        onFechar={() => setApostaModal(null)}
+      >
+        {apostaModal ? (
+          <>
+            <p className="ajuda">
+              Voce ganha so se acertar o placar exato. A odd e sorteada na hora (1.1x a 20x).
+            </p>
+            <div className="modal-palpite">
+              <span>Placar:</span>
+              <input
+                type="number"
+                min="0"
+                value={apostaModal.palpiteA}
+                onChange={(e) => setApostaModal({ ...apostaModal, palpiteA: e.target.value })}
+              />
+              <span>x</span>
+              <input
+                type="number"
+                min="0"
+                value={apostaModal.palpiteB}
+                onChange={(e) => setApostaModal({ ...apostaModal, palpiteB: e.target.value })}
+              />
+            </div>
+            <label className="modal-label">Quantas fichas vai queimar?</label>
+            <input
+              className="modal-input"
+              type="number"
+              min="1"
+              autoFocus
+              placeholder="ex: 200"
+              value={apostaModal.valor}
+              onChange={(e) => setApostaModal({ ...apostaModal, valor: e.target.value })}
+            />
+            <div className="modal-acoes">
+              <button className="secundario" onClick={() => setApostaModal(null)}>
+                Cancelar
+              </button>
+              <button className="apostar" onClick={confirmarAposta}>
+                Confirmar aposta
+              </button>
+            </div>
+          </>
+        ) : null}
+      </Modal>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
+import Modal from '../components/Modal.jsx';
 
 export default function MinhasApostas() {
   const { user, atualizarUser } = useAuth();
   const [apostas, setApostas] = useState([]);
   const [msg, setMsg] = useState('');
+  const [conversaoModal, setConversaoModal] = useState(null); // { tipo, quantidade }
 
   async function carregar() {
     setApostas(await api('/apostas'));
@@ -14,13 +16,16 @@ export default function MinhasApostas() {
     carregar().catch((e) => setMsg(e.message));
   }, []);
 
-  async function converter(tipo) {
-    const label = tipo === 'pp_para_fa' ? 'Quantos PP virar fichas (1 PP = 500 fichas)?' : 'Quantas fichas virar PP (250 fichas = 1 PP, multiplo de 250)?';
-    const quantidade = prompt(label);
-    if (!quantidade) return;
+  function abrirConversao(tipo) {
+    setConversaoModal({ tipo, quantidade: '' });
+  }
+
+  async function confirmarConversao() {
+    const { tipo, quantidade } = conversaoModal;
     try {
       await api('/conversao', { method: 'POST', body: { tipo, quantidade: Number(quantidade) } });
       await atualizarUser();
+      setConversaoModal(null);
       setMsg('Cambio feito. A casa agradece a sua ingenuidade.');
     } catch (e) {
       setMsg(e.message);
@@ -41,8 +46,8 @@ export default function MinhasApostas() {
         </div>
       </div>
       <div className="conversao">
-        <button onClick={() => converter('pp_para_fa')}>PP -&gt; Fichas (1:500)</button>
-        <button onClick={() => converter('fa_para_pp')}>Fichas -&gt; PP (250:1)</button>
+        <button onClick={() => abrirConversao('pp_para_fa')}>PP -&gt; Fichas (1:500)</button>
+        <button onClick={() => abrirConversao('fa_para_pp')}>Fichas -&gt; PP (250:1)</button>
       </div>
       {msg ? <div className="msg">{msg}</div> : null}
 
@@ -73,6 +78,44 @@ export default function MinhasApostas() {
           </tbody>
         </table>
       )}
+
+      <Modal
+        aberto={!!conversaoModal}
+        titulo={
+          conversaoModal?.tipo === 'pp_para_fa'
+            ? 'Trocar PP por Fichas'
+            : 'Trocar Fichas por PP'
+        }
+        onFechar={() => setConversaoModal(null)}
+      >
+        {conversaoModal ? (
+          <>
+            <p className="ajuda">
+              {conversaoModal.tipo === 'pp_para_fa'
+                ? 'Cambio: 1 PP = 500 fichas. Quantos PP quer queimar?'
+                : 'Cambio (proposital ruim): 250 fichas = 1 PP. Tem que ser multiplo de 250.'}
+            </p>
+            <label className="modal-label">Quantidade</label>
+            <input
+              className="modal-input"
+              type="number"
+              min="1"
+              autoFocus
+              placeholder={conversaoModal.tipo === 'pp_para_fa' ? 'ex: 10' : 'ex: 250'}
+              value={conversaoModal.quantidade}
+              onChange={(e) =>
+                setConversaoModal({ ...conversaoModal, quantidade: e.target.value })
+              }
+            />
+            <div className="modal-acoes">
+              <button className="secundario" onClick={() => setConversaoModal(null)}>
+                Cancelar
+              </button>
+              <button onClick={confirmarConversao}>Confirmar troca</button>
+            </div>
+          </>
+        ) : null}
+      </Modal>
     </div>
   );
 }

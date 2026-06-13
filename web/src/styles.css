@@ -223,6 +223,84 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
   color: #fff;
 }
 
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-card {
+  background: linear-gradient(160deg, #1c1712, #0a0806);
+  border: 2px solid var(--dourado);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 0 50px rgba(245, 197, 24, 0.4);
+  animation: modal-pop 0.15s ease-out;
+}
+@keyframes modal-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 2px solid var(--dourado-escuro);
+}
+.modal-head h3 { margin: 0; color: var(--dourado); }
+.modal-x {
+  background: transparent;
+  color: #fff;
+  padding: 4px 10px;
+  font-size: 1rem;
+}
+.modal-body { padding: 18px; }
+.modal-palpite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.modal-palpite input {
+  width: 56px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--dourado);
+  background: #14110f;
+  color: #fff;
+  font-size: 1.1rem;
+}
+.modal-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 0.85rem;
+  color: #c9c2b6;
+}
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--dourado-escuro);
+  background: #2a2118;
+  color: #fff;
+  font-size: 1.1rem;
+}
+.modal-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.modal-acoes button { flex: 1; padding: 12px; }
+.modal-acoes .secundario { background: #2a2118; color: #fff; }
+
 .rodape {
   text-align: center;
   padding: 24px;
