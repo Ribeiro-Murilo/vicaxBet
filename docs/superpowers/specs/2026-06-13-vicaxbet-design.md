@@ -1,4 +1,4 @@
-# vicaxBet — Design
+# ViBet — Design
 
 Data: 2026-06-13
 
@@ -53,7 +53,7 @@ React/Vite + MySQL. Sem criptografia pesada, sem recuperação de senha, sem ema
 ## Arquitetura (monorepo)
 
 ```
-vicaxBet/
+ViBet/
   package.json          (workspaces + scripts: dev, build)
   db/
     schema.sql          (tabelas)

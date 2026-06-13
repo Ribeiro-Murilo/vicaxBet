@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS vicaxbet
+CREATE DATABASE IF NOT EXISTS vibet
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE vicaxbet;
+USE vibet;
 
 DROP TABLE IF EXISTS apostas;
 DROP TABLE IF EXISTS palpites;

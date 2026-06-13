@@ -1,4 +1,4 @@
-USE vicaxbet;
+USE vibet;
 
 -- Admin "O Cartola". Login: admin / Senha: senhaadmin
 INSERT INTO users (username, password_hash, is_admin, pontos_principais, pontos_aposta)

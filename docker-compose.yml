@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: server/Dockerfile
-    container_name: vicax-server
+    container_name: vi-server
     # Le DB_HOST/DB_USER/DB_PASSWORD/DB_NAME/JWT_SECRET/PORT do .env (MySQL externo)
     env_file: .env
     ports:
@@ -17,7 +17,7 @@ services:
       args:
         # Endereco do back que o navegador vai chamar (vem do .env)
         VITE_API_URL: ${VITE_API_URL}
-    container_name: vicax-web
+    container_name: vi-web
     depends_on:
       - server
     ports:

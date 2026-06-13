@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, casa: 'vicaxBet' }));
+app.get('/api/health', (_req, res) => res.json({ ok: true, casa: 'ViBet' }));
 app.use('/api', authRoutes);
 app.use('/api/games', gamesRoutes);
 app.use('/api/palpites', palpitesRoutes);
@@ -23,5 +23,5 @@ app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`vicaxBet rodando na porta ${PORT}. A casa sempre... empata.`);
+  console.log(`ViBet rodando na porta ${PORT}. A casa sempre... empata.`);
 });

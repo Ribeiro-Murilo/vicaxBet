@@ -19,7 +19,7 @@ function Navbar() {
   if (!user || loc.pathname === '/login') return null;
   return (
     <nav className="navbar">
-      <span className="logo">vicaxBet</span>
+      <span className="logo">ViBet</span>
       <div className="links">
         <Link to="/">Jogos</Link>
         <Link to="/apostas">Minhas Apostas</Link>
@@ -48,7 +48,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <footer className="rodape">
-        vicaxBet &copy; - A unica bet onde voce so perde tempo, nao dinheiro.
+        ViBet &copy; - A unica bet onde voce so perde tempo, nao dinheiro.
         Jogue com responsabilidade (ou nao, e de mentira).
       </footer>
     </>

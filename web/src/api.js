@@ -1,4 +1,4 @@
-const TOKEN_KEY = 'vicax_token';
+const TOKEN_KEY = 'vi_token';
 
 // Em prod: endereco do back vem do build (VITE_API_URL). Em dev: vazio -> usa o proxy do Vite (/api)
 const API_BASE = import.meta.env.VITE_API_URL || '';

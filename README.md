@@ -1,4 +1,4 @@
-# vicaxBet
+# ViBet
 
 A casa de apostas da firma. So a Copa, **sem dinheiro de verdade** - voce so perde
 tempo e dignidade. Brincadeira interna, vai pela satira.
@@ -47,7 +47,7 @@ mysql -u root < db/schema.sql
 mysql -u root < db/seed.sql
 ```
 
-> O `schema.sql` ja cria o database `vicaxbet`. O `seed.sql` cria o admin
+> O `schema.sql` ja cria o database `vibet`. O `seed.sql` cria o admin
 > (**login: admin / senha: senhaadmin**) e alguns jogos de exemplo.
 
 ### 2. Configuracao
