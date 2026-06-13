@@ -1,8 +1,8 @@
 USE vicaxbet;
 
 -- Admin "O Cartola". Login: admin / Senha: admin
-INSERT INTO users (username, password_hash, is_admin, pontos_principais, fichas)
-VALUES ('admin', '$2a$08$11IHqvAJqFtHs4BIEu2r7uKrsb8BIkdpty5J84VIBZHBfkuLucJtC', 1, 0, 1000);
+INSERT INTO users (username, password_hash, is_admin, pontos)
+VALUES ('admin', '$2a$08$11IHqvAJqFtHs4BIEu2r7uKrsb8BIkdpty5J84VIBZHBfkuLucJtC', 1, 1000);
 
 -- Jogos de exemplo da Copa (o Cartola pode cadastrar mais pela tela de admin)
 INSERT INTO games (time_a, time_b, data_jogo, created_by) VALUES

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
 import { requireAuth, requireAdmin } from '../auth.js';
-import { pontosPrincipais, bonusFichas, resolveAposta } from '../scoring.js';
+import { resolveAposta } from '../scoring.js';
 
 const router = Router();
 
@@ -20,7 +20,7 @@ router.post('/games', async (req, res) => {
   res.json({ ok: true, id: r.insertId });
 });
 
-// Cartola lanca o placar final -> resolve palpites e apostas
+// Cartola lanca o placar final -> resolve as apostas do jogo
 router.post('/games/:id/resultado', async (req, res) => {
   const gameId = Number(req.params.id);
   const gol_a = Number(req.body?.gol_a);
@@ -44,21 +44,7 @@ router.post('/games/:id/resultado', async (req, res) => {
 
     const real = { a: gol_a, b: gol_b };
 
-    // Palpites oficiais: PP + bonus passivo de fichas
-    const [palpites] = await conn.query('SELECT * FROM palpites WHERE game_id = ?', [gameId]);
-    for (const p of palpites) {
-      const palpite = { a: p.palpite_gol_a, b: p.palpite_gol_b };
-      const pp = pontosPrincipais(palpite, real);
-      const fa = bonusFichas(palpite, real);
-      if (pp || fa) {
-        await conn.query(
-          'UPDATE users SET pontos_principais = pontos_principais + ?, fichas = fichas + ? WHERE id = ?',
-          [pp, fa, p.user_id]
-        );
-      }
-    }
-
-    // Apostas ativas: credita valor*odd se acertou o placar exato
+    // Apostas: credita valor*odd so para quem acertou o placar exato
     const [apostas] = await conn.query(
       "SELECT * FROM apostas WHERE game_id = ? AND status = 'pendente'",
       [gameId]
@@ -66,7 +52,7 @@ router.post('/games/:id/resultado', async (req, res) => {
     for (const a of apostas) {
       const { status, credito } = resolveAposta(a, real);
       if (credito > 0) {
-        await conn.query('UPDATE users SET fichas = fichas + ? WHERE id = ?', [credito, a.user_id]);
+        await conn.query('UPDATE users SET pontos = pontos + ? WHERE id = ?', [credito, a.user_id]);
       }
       await conn.query('UPDATE apostas SET status = ? WHERE id = ?', [status, a.id]);
     }
@@ -76,7 +62,7 @@ router.post('/games/:id/resultado', async (req, res) => {
       [gol_a, gol_b, gameId]
     );
     await conn.commit();
-    res.json({ ok: true, palpites: palpites.length, apostas: apostas.length });
+    res.json({ ok: true, apostas: apostas.length });
   } catch (e) {
     await conn.rollback();
     res.status(500).json({ erro: 'Deu ruim ao resolver o jogo' });

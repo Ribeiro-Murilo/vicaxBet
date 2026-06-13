@@ -50,8 +50,7 @@ body {
 .navbar .links a:hover { color: var(--dourado); }
 
 .saldo { display: flex; align-items: center; gap: 10px; }
-.saldo .pp, .pp { color: var(--dourado); font-weight: bold; }
-.saldo .fa, .fa { color: var(--neon); font-weight: bold; }
+.pontos { color: var(--dourado); font-weight: bold; }
 
 button {
   background: linear-gradient(180deg, var(--dourado), var(--dourado-escuro));
@@ -173,11 +172,8 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
   flex-direction: column;
 }
 .saldo-box .num { font-size: 2.2rem; font-weight: 900; }
-.pp-box { background: rgba(245,197,24,0.15); border: 2px solid var(--dourado); }
-.pp-box .num { color: var(--dourado); }
-.fa-box { background: rgba(255,46,136,0.15); border: 2px solid var(--neon); }
-.fa-box .num { color: var(--neon); }
-.conversao { display: flex; gap: 10px; margin-bottom: 16px; }
+.pontos-box { background: rgba(245,197,24,0.15); border: 2px solid var(--dourado); max-width: 240px; }
+.pontos-box .num { color: var(--dourado); }
 
 /* Tabelas */
 .tabela { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -199,6 +195,7 @@ h2 { color: var(--dourado); text-shadow: 1px 1px 0 #000; }
   border-radius: 12px;
   padding: 16px;
 }
+.rank-col.solo { max-width: 480px; }
 .rank-col h3 { color: var(--dourado); margin-top: 0; }
 .rank-lista { list-style: decimal inside; padding: 0; }
 .rank-lista li {

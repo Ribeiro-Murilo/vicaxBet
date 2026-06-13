@@ -6,45 +6,19 @@ import Modal from '../components/Modal.jsx';
 export default function Jogos() {
   const { atualizarUser } = useAuth();
   const [games, setGames] = useState([]);
-  const [palpites, setPalpites] = useState({});
   const [msg, setMsg] = useState('');
-  const [apostaModal, setApostaModal] = useState(null); // { game, valor }
+  const [apostaModal, setApostaModal] = useState(null); // { game, valor, palpiteA, palpiteB }
 
   async function carregar() {
-    const [gs, ps] = await Promise.all([api('/games'), api('/palpites')]);
-    setGames(gs);
-    const mapa = {};
-    for (const p of ps) mapa[p.game_id] = { a: p.palpite_gol_a, b: p.palpite_gol_b };
-    setPalpites(mapa);
+    setGames(await api('/games'));
   }
 
   useEffect(() => {
     carregar().catch((e) => setMsg(e.message));
   }, []);
 
-  function setPalpite(gameId, campo, valor) {
-    setPalpites((p) => ({
-      ...p,
-      [gameId]: { ...(p[gameId] || { a: '', b: '' }), [campo]: valor },
-    }));
-  }
-
-  async function salvarPalpite(gameId) {
-    const p = palpites[gameId] || {};
-    try {
-      await api('/palpites', {
-        method: 'POST',
-        body: { game_id: gameId, palpite_gol_a: Number(p.a), palpite_gol_b: Number(p.b) },
-      });
-      setMsg('Palpite oficial registrado. Agora reza.');
-    } catch (e) {
-      setMsg(e.message);
-    }
-  }
-
   function abrirAposta(game) {
-    const p = palpites[game.id] || {};
-    setApostaModal({ game, valor: '', palpiteA: p.a ?? '', palpiteB: p.b ?? '' });
+    setApostaModal({ game, valor: '', palpiteA: '', palpiteB: '' });
   }
 
   async function confirmarAposta() {
@@ -63,7 +37,7 @@ export default function Jogos() {
           valor: Number(valor),
         },
       });
-      setMsg(`Aposta feita! Odd travada em ${r.odd}x. Se acertar o placar exato, leva ${Math.round(r.valor * r.odd)} fichas.`);
+      setMsg(`Aposta feita! Odd travada em ${r.odd}x. Se acertar o placar exato, leva ${Math.round(r.valor * r.odd)} pontos.`);
       setApostaModal(null);
       await atualizarUser();
     } catch (e) {
@@ -75,13 +49,12 @@ export default function Jogos() {
     <div className="container">
       <h2>Jogos da Copa</h2>
       <p className="ajuda">
-        Palpite oficial: placar exato = 100 PP + 1000 fichas. So o vencedor = 10 PP + 500 fichas.
-        Aposta: arrisca fichas no placar exato e leva a odd aleatoria (1.1x a 20x).
+        Aposta seus pontos no placar exato. A odd e sorteada na hora (1.1x a 20x).
+        Acertou o placar = pontos x odd. Acertar so o vencedor nao da nada. Errou = perde a aposta.
       </p>
       {msg ? <div className="msg">{msg}</div> : null}
       <div className="jogos-grid">
         {games.map((g) => {
-          const p = palpites[g.id] || { a: '', b: '' };
           const resolvido = g.status === 'resolvido';
           return (
             <div key={g.id} className={`jogo-card ${resolvido ? 'resolvido' : ''}`}>
@@ -95,29 +68,11 @@ export default function Jogos() {
                   Final: {g.gol_a} x {g.gol_b}
                 </div>
               ) : (
-                <>
-                  <div className="palpite-inputs">
-                    <input
-                      type="number"
-                      min="0"
-                      value={p.a}
-                      onChange={(e) => setPalpite(g.id, 'a', e.target.value)}
-                    />
-                    <span>x</span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={p.b}
-                      onChange={(e) => setPalpite(g.id, 'b', e.target.value)}
-                    />
-                  </div>
-                  <div className="botoes">
-                    <button onClick={() => salvarPalpite(g.id)}>Palpite oficial</button>
-                    <button className="apostar" onClick={() => abrirAposta(g)}>
-                      Apostar fichas
-                    </button>
-                  </div>
-                </>
+                <div className="botoes">
+                  <button className="apostar" onClick={() => abrirAposta(g)}>
+                    Apostar pontos
+                  </button>
+                </div>
               )}
             </div>
           );
@@ -150,7 +105,7 @@ export default function Jogos() {
                 onChange={(e) => setApostaModal({ ...apostaModal, palpiteB: e.target.value })}
               />
             </div>
-            <label className="modal-label">Quantas fichas vai queimar?</label>
+            <label className="modal-label">Quantos pontos vai queimar?</label>
             <input
               className="modal-input"
               type="number"

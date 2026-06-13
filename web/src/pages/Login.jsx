@@ -30,7 +30,7 @@ export default function Login() {
     <div className="login-wrap">
       <div className="login-card">
         <h1 className="logo grande">vicaxBet</h1>
-        <p className="slogan">A casa que sempre... empata.</p>
+        <p className="slogan">A unica bet onde voce so perde tempo, nao dinheiro</p>
         <div className="tabs">
           <button className={modo === 'entrar' ? 'ativo' : ''} onClick={() => setModo('entrar')}>
             Entrar

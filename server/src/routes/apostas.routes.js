@@ -16,7 +16,7 @@ router.get('/', requireAuth, async (req, res) => {
   res.json(apostas);
 });
 
-// Aposta ativa: gera odd aleatoria e ja debita as fichas.
+// Aposta: gera odd aleatoria, debita os pontos e guarda o palpite de placar exato.
 router.post('/', requireAuth, async (req, res) => {
   const { game_id, palpite_gol_a, palpite_gol_b, valor } = req.body || {};
   const aposta = Number(valor);
@@ -40,15 +40,15 @@ router.post('/', requireAuth, async (req, res) => {
       return res.status(409).json({ erro: 'Jogo ja acabou, sem aposta' });
     }
     const [[user]] = await conn.query(
-      'SELECT fichas FROM users WHERE id = ? FOR UPDATE',
+      'SELECT pontos FROM users WHERE id = ? FOR UPDATE',
       [req.user.id]
     );
-    if (user.fichas < aposta) {
+    if (user.pontos < aposta) {
       await conn.rollback();
-      return res.status(400).json({ erro: 'Fichas insuficientes, vai trabalhar' });
+      return res.status(400).json({ erro: 'Pontos insuficientes, vai trabalhar' });
     }
     const odd = gerarOdd();
-    await conn.query('UPDATE users SET fichas = fichas - ? WHERE id = ?', [aposta, req.user.id]);
+    await conn.query('UPDATE users SET pontos = pontos - ? WHERE id = ?', [aposta, req.user.id]);
     const [r] = await conn.query(
       `INSERT INTO apostas (user_id, game_id, palpite_gol_a, palpite_gol_b, valor, odd)
        VALUES (?, ?, ?, ?, ?, ?)`,

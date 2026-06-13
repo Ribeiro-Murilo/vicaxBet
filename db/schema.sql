@@ -12,8 +12,7 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   is_admin TINYINT(1) NOT NULL DEFAULT 0,
-  pontos_principais INT NOT NULL DEFAULT 0,
-  fichas INT NOT NULL DEFAULT 1000,
+  pontos INT NOT NULL DEFAULT 1000,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,18 +26,6 @@ CREATE TABLE games (
   status ENUM('aberto','resolvido') NOT NULL DEFAULT 'aberto',
   created_by INT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE palpites (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  game_id INT NOT NULL,
-  palpite_gol_a INT NOT NULL,
-  palpite_gol_b INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_user_game (user_id, game_id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (game_id) REFERENCES games(id)
 );
 
 CREATE TABLE apostas (

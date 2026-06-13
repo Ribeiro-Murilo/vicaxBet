@@ -6,13 +6,14 @@ tempo e dignidade. Brincadeira interna, vai pela satira.
 ## O que e
 
 - Login e cadastro (sem firula de criptografia pesada).
-- Palpite de placar nos jogos da Copa.
-- **Duas moedas e dois rankings separados:**
-  - **Pontos Principais (PP)** - habilidade no palpite. Placar exato = 100, so o vencedor = 10.
-  - **Fichas (FA)** - o apostador. Comeca com 1000. Palpite oficial rende bonus (1000 exato / 500 vencedor)
-    e voce ainda pode **apostar fichas** num placar exato com **odd aleatoria de 1.1x a 20x**.
-  - Cambio (proposital ruim): `1 PP -> 500 FA` e na volta `250 FA -> 1 PP`.
-- Admin ("O Cartola") cadastra os jogos e lanca o placar final, que resolve palpites e apostas.
+- **Moeda unica: pontos.** Cada jogador comeca com **1000 pontos**.
+- **Aposta de pontos com odds:** voce escolhe um jogo, palpita o **placar exato**,
+  define quantos pontos apostar, e o sistema sorteia uma **odd de 1.1x a 20x** travada na hora.
+  - Acertou o placar exato -> ganha `pontos x odd`.
+  - Acertar **so o vencedor nao da nada**.
+  - Errou -> perde os pontos apostados.
+- **Um ranking** por pontos.
+- Admin ("O Cartola") cadastra os jogos e lanca o placar final, que resolve as apostas.
 
 ## Stack
 
