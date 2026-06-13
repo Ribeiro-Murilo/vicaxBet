@@ -178,11 +178,18 @@ export default function Jogos() {
         <div className="vicio">
           <p className="vicio-emoji">✋</p>
           <p>
-            Voce ja fez <strong>2 apostas nesse jogo</strong>. Isso aqui e brincadeira de firma e os
-            pontos nao valem nada, mas o impulso de apostar de novo e de novo... esse e real.
+            <strong>2 apostas no mesmo jogo.</strong> DUAS. Em pontos que nao valem nada, num
+            jogo que talvez nem aconteca, palpitando um placar que voce inventou. E ainda veio
+            pela terceira.
           </p>
           <p>
-            Se aposta de verdade estiver te incomodando, sem vergonha de procurar ajuda:
+            O cafezinho das 15h ja virou "so mais uma oddzinha"? O estagiario ja te chama de
+            "o investidor"? Seu mouse ja sabe o caminho do botao Apostar de olho fechado? Pai...
+            era pra ser brincadeira de firma, nao um estilo de vida.
+          </p>
+          <p>
+            Agora serio por um segundo: se aposta de verdade estiver pesando ai fora, procurar
+            ajuda nao tem nada de vergonha:
           </p>
           <ul className="vicio-contatos">
             <li><strong>Jogadores Anonimos:</strong> www.jogadoresanonimos.com.br</li>
